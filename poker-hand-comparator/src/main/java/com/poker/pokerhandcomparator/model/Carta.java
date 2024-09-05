@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Carta {
 
-    private String valor;
-    private String palo;
+    private String valor;  // Valor de la Carta: "2", "8", "K", "A"
+    private String palo;  // Palo de la Carta: "H", "D", "S", "C"
 
 }
