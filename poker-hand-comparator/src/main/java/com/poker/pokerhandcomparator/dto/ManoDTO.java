@@ -6,7 +6,7 @@ import lombok.Data;
 
 //DTO que resperesenta la entrada JSON de las dos manos de Poker
 @Data
-public class ManoDto {
+public class ManoDTO {
 
     //Primera y segunda mano, como cadenas de texto
     private String hand1;
