@@ -22,7 +22,7 @@ public class pokerServiceImpl implements IPokerService {
         Mano mano1 = convertirCadenaAMano(mano1Str);
         Mano mano2 = convertirCadenaAMano(mano2Str);
 
-        // Comprobar Escalera Real
+        // Comprobar Escalera Real (ROyal FLush)
         if (EvaluadorCartas.esEscaleraReal(mano1)) {
             return new ResultadoComparacion("hand1", "Escalera Real", mano1.getCartas());
         }
@@ -30,7 +30,7 @@ public class pokerServiceImpl implements IPokerService {
             return new ResultadoComparacion("hand2", "Escalera Real", mano2.getCartas());
         }
 
-        //Comprobar Escalera Color
+        //Comprobar Escalera Color (Royal Straight Flush)
         if (EvaluadorCartas.esEscaleraColor(mano1)) {
             return new ResultadoComparacion("hand1", "Escalera de Color", mano1.getCartas());
         }
