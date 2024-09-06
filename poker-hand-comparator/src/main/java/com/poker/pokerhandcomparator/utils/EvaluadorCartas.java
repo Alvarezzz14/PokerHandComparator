@@ -11,12 +11,12 @@ public class EvaluadorCartas {
 
     //Verifica si una mano es escalera Real (Royal FLush)
     public static boolean esEscaleraReal(Mano mano) {
-        return esEscaleraDeColor(mano) && mano.getCartas().stream().anyMatch(carta -> carta.getValor().equals("A"));
+        return esEscaleraColor(mano) && mano.getCartas().stream().anyMatch(carta -> carta.getValor().equals("A"));
 
     }
 
     //verifica si una mano es escalera De COlor (Straight FLush)
-    public static boolean esEscaleraDeColor(Mano mano) {
+    public static boolean esEscaleraColor(Mano mano) {
         return esEscalera(mano) && esColor(mano);
     }
 
