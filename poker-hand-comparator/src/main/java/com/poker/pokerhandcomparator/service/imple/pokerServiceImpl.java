@@ -18,9 +18,12 @@ public class pokerServiceImpl implements IPokerService {
     @Override
     public ResultadoComparacion compararManos(String mano1Str, String mano2Str) {
 
+
+
         //Convertimos las cadenas de texto a objetos "Mano"
         Mano mano1 = convertirCadenaAMano(mano1Str);
         Mano mano2 = convertirCadenaAMano(mano2Str);
+
 
         // Comprobar Escalera Real //RoyalFlush
         if (EvaluadorCartas.esEscaleraReal(mano1)) {
