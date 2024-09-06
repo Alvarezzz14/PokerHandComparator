@@ -47,7 +47,7 @@ public class EvaluadorCartas {
                 .map(carta -> CartaUtils.convertirValorAEntero(carta.getValor()))
                 .sorted()
                 .map(CartaUtils::convertirEnteroAValor)
-                .collect(Collectors.toList());
+                .toList();
 
         for (int i = 0; i < valoresOrdenados.size() - 1; i++) {
             if (CartaUtils.convertirValorAEntero(valoresOrdenados.get(i)) + 1 != CartaUtils.convertirValorAEntero(valoresOrdenados.get(i +1))) {
