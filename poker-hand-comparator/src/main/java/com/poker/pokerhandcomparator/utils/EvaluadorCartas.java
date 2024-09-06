@@ -1,5 +1,6 @@
 package com.poker.pokerhandcomparator.utils;
 
+import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
 
 import java.util.List;
@@ -23,14 +24,14 @@ public class EvaluadorCartas {
     //Verififcar si una mano es un Poker(Four of kind)
     public static boolean esPoker(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()
-                .collect(Collectors.groupingBy(carta -> carta.getValor(), Collectors.counting()));
+                .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
         return conteoValores.containsValue(4L);
     }
 
     //Verifica si una mano es Full House.
     public static boolean esFullHouse(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()
-                .collect(Collectors.groupingBy(carta -> carta.getValor(), Collectors.counting()));
+                .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
         return conteoValores.containsValue(3L) && conteoValores.containsValue(2L);
     }
 
