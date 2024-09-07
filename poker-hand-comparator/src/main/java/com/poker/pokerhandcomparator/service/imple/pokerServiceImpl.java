@@ -6,6 +6,7 @@ import com.poker.pokerhandcomparator.model.ResultadoComparacion;
 import com.poker.pokerhandcomparator.service.IPokerService;
 import com.poker.pokerhandcomparator.utils.CartaUtils;
 import com.poker.pokerhandcomparator.utils.EvaluadorCartas;
+import com.poker.pokerhandcomparator.utils.PokerUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,8 +19,6 @@ public class pokerServiceImpl implements IPokerService {
     @Override
     public ResultadoComparacion compararManos(String mano1Str, String mano2Str) {
 
-
-
         //Convertimos las cadenas de texto a objetos "Mano"
         Mano mano1 = convertirCadenaAMano(mano1Str);
         Mano mano2 = convertirCadenaAMano(mano2Str);
@@ -27,42 +26,50 @@ public class pokerServiceImpl implements IPokerService {
 
         // Comprobar Escalera Real //RoyalFlush
         if (EvaluadorCartas.esEscaleraReal(mano1)) {
-            return new ResultadoComparacion("hand1", "RoyalFlush", mano1.getCartas());
+            return new ResultadoComparacion("hand1", "RoyalFlush", PokerUtils.convertirCartasFormatoSoloPalo(mano1.getCartas()));
         }
         if (EvaluadorCartas.esEscaleraReal(mano2)) {
-            return new ResultadoComparacion("hand2", "RoyalFlush", mano2.getCartas());
+            return new ResultadoComparacion("hand2", "RoyalFlush", PokerUtils.convertirCartasFormatoSoloPalo(mano2.getCartas()));
         }
 
         //Comprobar Escalera Color //StraightFlush
         if (EvaluadorCartas.esEscaleraColor(mano1)) {
-            return new ResultadoComparacion("hand1", "StraightFlush", mano1.getCartas());
+            return new ResultadoComparacion("hand1", "StraightFlush", PokerUtils.convertirCartasFormatoSoloPalo(mano1.getCartas()));
         }
         if (EvaluadorCartas.esEscaleraColor(mano2)) {
-            return new ResultadoComparacion("hand2", "StraightFlush", mano2.getCartas());
+            return new ResultadoComparacion("hand2", "StraightFlush", PokerUtils.convertirCartasFormatoSoloPalo(mano2.getCartas()));
         }
 
         // Comprobar Full Poker (Four of a Kind) FourOfAKind
         if (EvaluadorCartas.esPoker(mano1)) {
-            return new ResultadoComparacion("hand1", "FourOfAKind", mano1.getCartas());
+            return new ResultadoComparacion("hand1", "FourOfAKind", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas()));
         }
         if (EvaluadorCartas.esPoker(mano2)) {
-            return new ResultadoComparacion("hand2", "FourOfAKind", mano2.getCartas());
+            return new ResultadoComparacion("hand2", "FourOfAKind", PokerUtils.convertirCartasFormatoSoloValor(mano2.getCartas()));
         }
 
         //Comprobar FUll House //FullHouse
         if (EvaluadorCartas.esFullHouse(mano1)) {
-            return new ResultadoComparacion("hand1", "FullHouse", mano1.getCartas());
+            List<String> resultadoFormateado = PokerUtils.ordenarFullHouse(mano1).stream()
+                    .map(carta -> PokerUtils.convertirPaloANombreCompleto(carta.getPalo())  + " & " + carta.getValor() )
+                    .toList();
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+            return new ResultadoComparacion("hand1", "FullHouse", resultadoArray);
         }
         if (EvaluadorCartas.esFullHouse(mano2)) {
-            return new ResultadoComparacion("hand2", "FullHouse", mano2.getCartas());
+            List<String> resultadoFormateado = PokerUtils.ordenarFullHouse(mano2).stream()
+                    .map(carta -> carta.getValor() + " & " + PokerUtils.convertirPaloANombreCompleto(carta.getPalo()))
+                    .toList();
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+            return new ResultadoComparacion("hand2", "FullHouse", resultadoArray);
         }
 
         //Comprobar si es Color //Flush
         if (EvaluadorCartas.esColor(mano1)) {
-            return new ResultadoComparacion("hand1", "Flush", mano1.getCartas());
+            return new ResultadoComparacion("hand1", "Flush", PokerUtils.convertirCartasAString(mano1.getCartas()));
         }
         if (EvaluadorCartas.esColor(mano2)) {
-            return new ResultadoComparacion("hand2", "Flush", mano2.getCartas());
+            return new ResultadoComparacion("hand2", "Flush", PokerUtils.convertirCartasAString(mano2.getCartas()));
         }
 
         //Si ninguna de las manos tiene una de las categorias anteriores, compara por la Carta Alta
@@ -99,14 +106,14 @@ public class pokerServiceImpl implements IPokerService {
             int valorMano2 = CartaUtils.convertirValorAEntero(cartasMano2.get(i).getValor());
 
             if(valorMano1 > valorMano2) {
-                return new ResultadoComparacion("hand1", "HighCard", mano1.getCartas());
+                return new ResultadoComparacion("hand1", "HighCard", PokerUtils.convertirCartasAString(mano1.getCartas()));
             } else if (valorMano2 > valorMano1) {
-                return new ResultadoComparacion("hand2", "HighCard", mano2.getCartas());
+                return new ResultadoComparacion("hand2", "HighCard", PokerUtils.convertirCartasAString(mano2.getCartas()));
 
             }
         }
 
-        return new ResultadoComparacion("Empate", "HighCard", mano1.getCartas());
+        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasAString(mano1.getCartas()));
 
     }
 
