@@ -10,6 +10,12 @@ import java.util.stream.Collectors;
 //clase para evaluar los diferentes tipos de manos de poker
 public class EvaluadorCartas {
 
+    // Verificar si es Escalera Straight
+    public static boolean esEscaleraStraight(Mano mano) {
+        return esEscalera(mano);
+    }
+
+
     //Verificar si es Pair
     public static boolean esOnePair(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()

@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.poker.pokerhandcomparator.utils.EvaluadorCartas.esEscalera;
+
 @Service
 public class pokerServiceImpl implements IPokerService {
 
@@ -72,6 +74,14 @@ public class pokerServiceImpl implements IPokerService {
             return new ResultadoComparacion("hand2", "Flush", PokerUtils.convertirCartasAString(mano2.getCartas()));
         }
 
+        ////Comprobar Escalera Straight
+        if (EvaluadorCartas.esEscaleraStraight(mano1)) {
+            return new ResultadoComparacion("hand1", "Straight", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas()));
+        }
+        if (EvaluadorCartas.esEscaleraStraight(mano2)) {
+            return new ResultadoComparacion("hand2", "Straight", PokerUtils.convertirCartasFormatoSoloValor(mano2.getCartas()));
+        }
+
         // Comprobar Three of a Kind
         if (EvaluadorCartas.esThreeOfAKind(mano1)) {
             List<String> resultadoFormateado = PokerUtils.ordenarThreeOfAKind(mano1);
@@ -104,10 +114,16 @@ public class pokerServiceImpl implements IPokerService {
             return new ResultadoComparacion("hand1", "OnePair", resultadoArray);
         }
 
+        if (EvaluadorCartas.esOnePair(mano2)) {
+            List<String> resultadoFormateado = PokerUtils.ordenarOnePair(mano2);
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+            return new ResultadoComparacion("hand2", "OnePair", resultadoArray);
+        }
 
         //Si ninguna de las manos tiene una de las categorias anteriores, compara por la Carta Alta
         return compararCartaAlta(mano1, mano2);
     }
+
 
     //Convertir cadena a un OBJETO Mano
     private Mano convertirCadenaAMano(String manoStr){
@@ -139,14 +155,14 @@ public class pokerServiceImpl implements IPokerService {
             int valorMano2 = CartaUtils.convertirValorAEntero(cartasMano2.get(i).getValor());
 
             if(valorMano1 > valorMano2) {
-                return new ResultadoComparacion("hand1", "HighCard", PokerUtils.convertirCartasAString(mano1.getCartas()));
+                return new ResultadoComparacion("hand1", "HighCard", PokerUtils.convertirCartasFormatoSoloValorAbreviado(cartasMano1));
             } else if (valorMano2 > valorMano1) {
-                return new ResultadoComparacion("hand2", "HighCard", PokerUtils.convertirCartasAString(mano2.getCartas()));
+                return new ResultadoComparacion("hand2", "HighCard", PokerUtils.convertirCartasFormatoSoloValorAbreviado(cartasMano2));
 
             }
         }
 
-        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasAString(mano1.getCartas()));
+        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas()));
 
     }
 

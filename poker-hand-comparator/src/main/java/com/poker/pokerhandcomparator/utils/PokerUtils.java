@@ -37,6 +37,9 @@ public class PokerUtils {
     //Metodo para convertir las cartas a un array de solo valores
     public static String[] convertirCartasFormatoSoloValor(List<Carta> cartas) {
         return cartas.stream()
+                .sorted((carta1,carta2) -> Integer.compare(
+                        CartaUtils.convertirValorAEntero(carta2.getValor()),
+                        CartaUtils.convertirValorAEntero(carta1.getValor())))
                 .map(Carta::getValor) // Solo vvalor de la carta
                 .toArray(String[]::new);
     }
@@ -53,9 +56,20 @@ public class PokerUtils {
 
     public static String[] convertirCartasAString(List<Carta> cartas) {
         return cartas.stream()
+                .sorted((carta1,carta2) -> Integer.compare(
+                        CartaUtils.convertirValorAEntero(carta2.getValor()),
+                        CartaUtils.convertirValorAEntero(carta1.getValor())))
                 .map(carta -> carta.getValor() + carta.getPalo()) //combinamos el valor y el valo en una sola cadena
                 .toArray(String[]::new); //COnvierte la lisata de cadenas en un array de strings
     }
+
+    //
+    public static String[] convertirCartasFormatoSoloValorAbreviado(List<Carta> cartas) {
+        return cartas.stream()
+                .map(carta -> CartaUtils.convertirValorAAbreviatura(carta.getValor())) // Convertir a abreviatura
+                .toArray(String[]::new);
+    }
+
 
     //Ordenar Cartar FullHouse (primero Three of Kind y luego Pair
     public static List<Carta> ordenarFullHouse(Mano mano) {
@@ -86,19 +100,26 @@ public class PokerUtils {
         List<String> pares = mano.getCartas().stream()
                 .map(Carta::getValor)
                 .filter(valor -> conteoValores.get(valor) == 2)
-                .distinct() // Eliminar duplicados para tener solo un valor de cada par
                 .sorted((v1, v2) -> Integer.compare(CartaUtils.convertirValorAEntero(v2), CartaUtils.convertirValorAEntero(v1))) // Ordenar por valor descendente
-                .toList();
-
-        // Convertir las abreviaturas
-        pares = pares.stream()
                 .map(CartaUtils::convertirAbreviaturaAValor)
                 .toList();
 
-        if (pares.size() >= 2) {
-            return List.of(pares.get(0), pares.get(1)); // Devuelve los dos pares
-        }
-        return List.of();
+        List<String> restantes = mano.getCartas().stream()
+                .map(Carta::getValor)
+                .filter(valor -> conteoValores.get(valor) != 2)
+                .sorted((v1, v2) -> Integer.compare(CartaUtils.convertirValorAEntero(v2), CartaUtils.convertirValorAEntero(v1))) // Ordenar por valor descendente
+                .map(CartaUtils::convertirAbreviaturaAValor)
+                .toList();
+
+        List<String> resultadoFinal = new ArrayList<>();
+        resultadoFinal.add(pares.get(0));
+        resultadoFinal.add(pares.get(2));
+        resultadoFinal.add(pares.get(3));
+        resultadoFinal.add(pares.get(1));
+        resultadoFinal.addAll(restantes);
+
+        return resultadoFinal;
+
     }
 
     // Ordenar Three of a Kind
@@ -134,11 +155,11 @@ public class PokerUtils {
                 .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
 
         //Obtenemos Cartas que forman el par
-        List<String> par = new java.util.ArrayList<>((Collection) mano.getCartas().stream()
+        List<String> par = mano.getCartas().stream()
                 .map(Carta::getValor)
                 .filter(valor-> conteoValores.get(valor) == 2)
                 .map(CartaUtils::convertirAbreviaturaAValor)
-                .toList());
+                .collect(Collectors.toList());
 
         List<String> restantes = mano.getCartas().stream()
                 .map(Carta::getValor)

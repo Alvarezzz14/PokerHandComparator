@@ -35,7 +35,7 @@ public class CartaUtils {
     //COnvertir valor a Aberviatura
     public static String convertirValorAAbreviatura(String valor) {
         return switch (valor) {
-            case "A" -> "A";
+            case "A" -> "As";
             case "King" -> "K";
             case "Queen" -> "Q";
             case "Jack" -> "J";
