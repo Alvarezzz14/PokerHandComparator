@@ -3,6 +3,8 @@ package com.poker.pokerhandcomparator.utils;
 import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -88,7 +90,7 @@ public class PokerUtils {
                 .sorted((v1, v2) -> Integer.compare(CartaUtils.convertirValorAEntero(v2), CartaUtils.convertirValorAEntero(v1))) // Ordenar por valor descendente
                 .toList();
 
-        // Convertir las abreviaturas (King -> K, Queen -> Q, etc.)
+        // Convertir las abreviaturas
         pares = pares.stream()
                 .map(CartaUtils::convertirAbreviaturaAValor)
                 .toList();
@@ -124,6 +126,30 @@ public class PokerUtils {
         // Combinar el trio con las cartas restantes
         trio.addAll(restantes);
         return trio;
+    }
+
+    //Ordenar OnePair
+    public static List<String> ordenarOnePair(Mano mano) {
+        Map<String, Long> conteoValores = mano.getCartas().stream()
+                .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
+
+        //Obtenemos Cartas que forman el par
+        List<String> par = new java.util.ArrayList<>((Collection) mano.getCartas().stream()
+                .map(Carta::getValor)
+                .filter(valor-> conteoValores.get(valor) == 2)
+                .map(CartaUtils::convertirAbreviaturaAValor)
+                .toList());
+
+        List<String> restantes = mano.getCartas().stream()
+                .map(Carta::getValor)
+                .filter(valor -> conteoValores.get(valor) != 2)
+                .sorted((v1, v2) -> Integer.compare(CartaUtils.convertirValorAEntero(v2), CartaUtils.convertirValorAEntero(v1))) // Ordenar por valor descendente
+                .map(CartaUtils::convertirAbreviaturaAValor)
+                .toList();
+
+        par.addAll(restantes);
+        return par;
+
     }
 
 

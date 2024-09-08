@@ -10,6 +10,15 @@ import java.util.stream.Collectors;
 //clase para evaluar los diferentes tipos de manos de poker
 public class EvaluadorCartas {
 
+    //Verificar si es Pair
+    public static boolean esOnePair(Mano mano) {
+        Map<String, Long> conteoValores = mano.getCartas().stream()
+                .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
+
+        long pares = conteoValores.values().stream().filter(count -> count == 2).count();
+        return pares == 1;
+    }
+
     //Verifica si es TwoPair
     public static boolean esTwoPair(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()

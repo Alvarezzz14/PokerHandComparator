@@ -97,6 +97,13 @@ public class pokerServiceImpl implements IPokerService {
             return new ResultadoComparacion("hand2", "TwoPair", resultadoArray);
         }
 
+        //COmprobar OnePair
+        if (EvaluadorCartas.esOnePair(mano1)) {
+            List<String> resultadoFormateado = PokerUtils.ordenarOnePair(mano1);
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+            return new ResultadoComparacion("hand1", "OnePair", resultadoArray);
+        }
+
 
         //Si ninguna de las manos tiene una de las categorias anteriores, compara por la Carta Alta
         return compararCartaAlta(mano1, mano2);
