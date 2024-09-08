@@ -1,5 +1,6 @@
 package com.poker.pokerhandcomparator.controller;
 
+import com.poker.pokerhandcomparator.exceptions.utils.InvalidCardValueException;
 import com.poker.pokerhandcomparator.model.ResultadoComparacion;
 import com.poker.pokerhandcomparator.service.IPokerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,14 @@ public class PokerController {
     //Endpoint
     @PostMapping("/validation")
     public ResultadoComparacion compararManos(@RequestBody ManoDTO manosDTO) {
-        return pokerService.compararManos(manosDTO.getHand1(), manosDTO.getHand2());
-    }
+        try {
+            return pokerService.compararManos(manosDTO.getHand1(), manosDTO.getHand2());
 
+        } catch (InvalidCardValueException e) {
+            throw e; // se lanza excepcion y es capturada por GlobalExceptionHandler
+        } catch (Exception e) {
+            throw new RuntimeException("Error Inesperado al comparar manos", e);
+        }
+
+    }
 }
