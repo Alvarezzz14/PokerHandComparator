@@ -4,6 +4,7 @@ import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,9 +38,7 @@ public class PokerUtils {
     public static String[] convertirCartasFormatoSoloValor(List<Carta> cartas, boolean ordenAscendente) {
         if (ordenAscendente) {
             return cartas.stream()
-                    .sorted((carta1, carta2) -> Integer.compare(
-                            CartaUtils.convertirValorAEntero(carta1.getValor()),
-                            CartaUtils.convertirValorAEntero(carta2.getValor())))
+                    .sorted(Comparator.comparingInt(carta -> CartaUtils.convertirValorAEntero(carta.getValor())))
                     .map(Carta::getValor) // Solo valor de la carta
                     .toArray(String[]::new);
         } else {
@@ -81,22 +80,24 @@ public class PokerUtils {
 
 
     //Ordenar Cartar FullHouse (primero Three of Kind y luego Pair
-    public static List<Carta> ordenarFullHouse(Mano mano) {
+    public static List<String> ordenarFullHouse(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()
                 .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
 
-        List<Carta> threeOfAKind = new java.util.ArrayList<>(mano.getCartas().stream()
+        List<Carta> threeOfAKind = mano.getCartas().stream()
                 .filter(carta -> conteoValores.get(carta.getValor()) == 3)
-                .toList());
+                .toList();
 
         List<Carta> pair = mano.getCartas().stream()
                 .filter(carta -> conteoValores.get(carta.getValor()) == 2)
                 .toList();
 
-        //Concatenamos ambas listas
-        threeOfAKind.addAll(pair);
+        List<Carta> resultado = new java.util.ArrayList<>(pair);
+        resultado.addAll(threeOfAKind);
 
-        return threeOfAKind;
+        return resultado.stream()
+                .map(Carta::getValor)
+                .toList();
     }
 
     // Ordenar TwoPair

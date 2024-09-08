@@ -67,7 +67,7 @@ public class EvaluadorCartas {
     public static boolean esFullHouse(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()
                 .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
-        return conteoValores.containsValue(3L) && conteoValores.containsValue(2L);
+        return conteoValores.containsValue(2L) && conteoValores.containsValue(3L);
     }
 
     //Verifica si una mano es COlor (Flush)

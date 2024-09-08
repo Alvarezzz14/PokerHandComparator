@@ -10,6 +10,7 @@ import com.poker.pokerhandcomparator.utils.PokerUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,17 +55,14 @@ public class pokerServiceImpl implements IPokerService {
 
         //Comprobar FUll House //FullHouse
         if (EvaluadorCartas.esFullHouse(mano1)) {
-            List<String> resultadoFormateado = PokerUtils.ordenarFullHouse(mano1).stream()
-                    .map(carta -> PokerUtils.convertirPaloANombreCompleto(carta.getPalo())  + " & " + carta.getValor() )
-                    .toList();
+            List<String> resultadoFormateado = PokerUtils.ordenarFullHouse(mano1);
             String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
             return new ResultadoComparacion("hand1", "FullHouse", resultadoArray);
         }
         if (EvaluadorCartas.esFullHouse(mano2)) {
-            List<String> resultadoFormateado = PokerUtils.ordenarFullHouse(mano2).stream()
-                    .map(carta -> carta.getValor() + " & " + PokerUtils.convertirPaloANombreCompleto(carta.getPalo()))
-                    .toList();
+            List<String> resultadoFormateado = PokerUtils.ordenarFullHouse(mano1);
             String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+
             return new ResultadoComparacion("hand2", "FullHouse", resultadoArray);
         }
 
