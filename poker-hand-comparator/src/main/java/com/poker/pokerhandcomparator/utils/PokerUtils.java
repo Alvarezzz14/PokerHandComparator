@@ -4,7 +4,6 @@ import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,13 +34,23 @@ public class PokerUtils {
 
 
     //Metodo para convertir las cartas a un array de solo valores
-    public static String[] convertirCartasFormatoSoloValor(List<Carta> cartas) {
-        return cartas.stream()
-                .sorted((carta1,carta2) -> Integer.compare(
-                        CartaUtils.convertirValorAEntero(carta2.getValor()),
-                        CartaUtils.convertirValorAEntero(carta1.getValor())))
-                .map(Carta::getValor) // Solo vvalor de la carta
-                .toArray(String[]::new);
+    public static String[] convertirCartasFormatoSoloValor(List<Carta> cartas, boolean ordenAscendente) {
+        if (ordenAscendente) {
+            return cartas.stream()
+                    .sorted((carta1, carta2) -> Integer.compare(
+                            CartaUtils.convertirValorAEntero(carta1.getValor()),
+                            CartaUtils.convertirValorAEntero(carta2.getValor())))
+                    .map(Carta::getValor) // Solo valor de la carta
+                    .toArray(String[]::new);
+        } else {
+            return cartas.stream()
+                    .sorted((carta1, carta2) -> Integer.compare(
+                            CartaUtils.convertirValorAEntero(carta2.getValor()),
+                            CartaUtils.convertirValorAEntero(carta1.getValor())))
+                    .map(Carta::getValor) // Solo valor de la carta
+                    .toArray(String[]::new);
+        }
+
     }
 
     //Metodo para convertir las cartas aun array de solo palos

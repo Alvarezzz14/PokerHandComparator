@@ -26,6 +26,8 @@ public class pokerServiceImpl implements IPokerService {
         Mano mano2 = convertirCadenaAMano(mano2Str);
 
 
+
+
         // Comprobar Escalera Real //RoyalFlush
         if (EvaluadorCartas.esEscaleraReal(mano1)) {
             return new ResultadoComparacion("hand1", "RoyalFlush", PokerUtils.convertirCartasFormatoSoloPalo(mano1.getCartas()));
@@ -44,10 +46,10 @@ public class pokerServiceImpl implements IPokerService {
 
         // Comprobar Full Poker (Four of a Kind) FourOfAKind
         if (EvaluadorCartas.esPoker(mano1)) {
-            return new ResultadoComparacion("hand1", "FourOfAKind", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas()));
+            return new ResultadoComparacion("hand1", "FourOfAKind", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas(), true));
         }
         if (EvaluadorCartas.esPoker(mano2)) {
-            return new ResultadoComparacion("hand2", "FourOfAKind", PokerUtils.convertirCartasFormatoSoloValor(mano2.getCartas()));
+            return new ResultadoComparacion("hand2", "FourOfAKind", PokerUtils.convertirCartasFormatoSoloValor(mano2.getCartas(), true));
         }
 
         //Comprobar FUll House //FullHouse
@@ -68,18 +70,18 @@ public class pokerServiceImpl implements IPokerService {
 
         //Comprobar si es Color //Flush
         if (EvaluadorCartas.esColor(mano1)) {
-            return new ResultadoComparacion("hand1", "Flush", PokerUtils.convertirCartasAString(mano1.getCartas()));
+            return new ResultadoComparacion("hand1", "Flush", PokerUtils.convertirCartasFormatoSoloPalo(mano1.getCartas()));
         }
         if (EvaluadorCartas.esColor(mano2)) {
-            return new ResultadoComparacion("hand2", "Flush", PokerUtils.convertirCartasAString(mano2.getCartas()));
+            return new ResultadoComparacion("hand2", "Flush", PokerUtils.convertirCartasFormatoSoloPalo(mano2.getCartas()));
         }
 
         ////Comprobar Escalera Straight
         if (EvaluadorCartas.esEscaleraStraight(mano1)) {
-            return new ResultadoComparacion("hand1", "Straight", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas()));
+            return new ResultadoComparacion("hand1", "Straight", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas(), true));
         }
         if (EvaluadorCartas.esEscaleraStraight(mano2)) {
-            return new ResultadoComparacion("hand2", "Straight", PokerUtils.convertirCartasFormatoSoloValor(mano2.getCartas()));
+            return new ResultadoComparacion("hand2", "Straight", PokerUtils.convertirCartasFormatoSoloValor(mano2.getCartas(), true));
         }
 
         // Comprobar Three of a Kind
@@ -162,7 +164,7 @@ public class pokerServiceImpl implements IPokerService {
             }
         }
 
-        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas()));
+        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas(),false));
 
     }
 
