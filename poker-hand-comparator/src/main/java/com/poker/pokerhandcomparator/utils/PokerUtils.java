@@ -2,6 +2,7 @@ package com.poker.pokerhandcomparator.utils;
 
 import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
+import com.poker.pokerhandcomparator.model.ResultadoComparacion;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -182,6 +183,33 @@ public class PokerUtils {
         return par;
 
     }
+
+    //Comparar Dos manos por carta alta //HighCard
+    public static ResultadoComparacion compararCartaAlta(Mano mano1, Mano mano2) {
+        List<Carta> cartasMano1 = mano1.getCartas().stream()
+                .sorted((c1, c2) -> Integer.compare(CartaUtils.convertirValorAEntero(c2.getValor()), CartaUtils.convertirValorAEntero(c1.getValor())))
+                .toList();
+
+        List<Carta> cartasMano2 = mano2.getCartas().stream()
+                .sorted((c1, c2) -> Integer.compare(CartaUtils.convertirValorAEntero(c2.getValor()), CartaUtils.convertirValorAEntero(c1.getValor())))
+                .toList();
+
+        for (int i = 0; i < 5; i++) {
+            int valorMano1 = CartaUtils.convertirValorAEntero(cartasMano1.get(i).getValor());
+            int valorMano2 = CartaUtils.convertirValorAEntero(cartasMano2.get(i).getValor());
+
+            if(valorMano1 > valorMano2) {
+                return new ResultadoComparacion("hand1", "HighCard", PokerUtils.convertirCartasFormatoSoloValorAbreviado(cartasMano1));
+            } else if (valorMano2 > valorMano1) {
+                return new ResultadoComparacion("hand2", "HighCard", PokerUtils.convertirCartasFormatoSoloValorAbreviado(cartasMano2));
+
+            }
+        }
+
+        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas(),false));
+
+    }
+
 
 
 }

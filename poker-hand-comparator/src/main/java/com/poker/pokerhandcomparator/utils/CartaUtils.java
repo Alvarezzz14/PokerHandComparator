@@ -1,5 +1,12 @@
 package com.poker.pokerhandcomparator.utils;
 
+import com.poker.pokerhandcomparator.model.Carta;
+import com.poker.pokerhandcomparator.model.Mano;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 //Convertir Valores de cartas
 public class CartaUtils {
 
@@ -50,6 +57,22 @@ public class CartaUtils {
             case "J" -> "Jack";
             default -> valor; // Si es un número, lo dejamos igual
         };
+    }
+
+    //Convertir cadena a un OBJETO Mano
+    public static Mano convertirCadenaAMano(String manoStr){
+        List<Carta> cartas = Arrays.stream(manoStr.split(" "))
+                .map(CartaUtils::crearCarta)
+                .collect(Collectors.toList());
+        return new Mano(cartas);
+    }
+
+
+    //Crear un objeto Carta apartir de una cadena
+    public static Carta crearCarta(String cartaStr) {
+        String valor = cartaStr.substring(0, cartaStr.length() -1);
+        String palo = cartaStr.substring(cartaStr.length() -1);
+        return new Carta(valor, palo);
     }
 
 }
