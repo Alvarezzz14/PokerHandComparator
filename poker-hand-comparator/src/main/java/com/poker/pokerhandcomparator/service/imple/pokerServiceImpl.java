@@ -10,11 +10,9 @@ import com.poker.pokerhandcomparator.utils.PokerUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.poker.pokerhandcomparator.utils.EvaluadorCartas.esEscalera;
 
 @Service
 public class pokerServiceImpl implements IPokerService {
@@ -23,10 +21,8 @@ public class pokerServiceImpl implements IPokerService {
     public ResultadoComparacion compararManos(String mano1Str, String mano2Str) {
 
         //Convertimos las cadenas de texto a objetos "Mano"
-        Mano mano1 = convertirCadenaAMano(mano1Str);
-        Mano mano2 = convertirCadenaAMano(mano2Str);
-
-
+        Mano mano1 = CartaUtils.convertirCadenaAMano(mano1Str);
+        Mano mano2 = CartaUtils.convertirCadenaAMano(mano2Str);
 
 
         // Comprobar Escalera Real //RoyalFlush
@@ -121,49 +117,9 @@ public class pokerServiceImpl implements IPokerService {
         }
 
         //Si ninguna de las manos tiene una de las categorias anteriores, compara por la Carta Alta
-        return compararCartaAlta(mano1, mano2);
+        return PokerUtils.compararCartaAlta(mano1, mano2);
     }
 
 
-    //Convertir cadena a un OBJETO Mano
-    private Mano convertirCadenaAMano(String manoStr){
-        List<Carta> cartas = Arrays.stream(manoStr.split(" "))
-                .map(this::crearCarta)
-                .collect(Collectors.toList());
-        return new Mano(cartas);
-    }
-
-    //Crear un objeto Carta apartir de una cadena
-    private Carta crearCarta(String cartaStr) {
-        String valor = cartaStr.substring(0, cartaStr.length() -1);
-        String palo = cartaStr.substring(cartaStr.length() -1);
-        return new Carta(valor, palo);
-    }
-
-    //Comparar Dos manos por carta alta //HighCard
-    private ResultadoComparacion compararCartaAlta(Mano mano1, Mano mano2) {
-        List<Carta> cartasMano1 = mano1.getCartas().stream()
-                .sorted((c1, c2) -> Integer.compare(CartaUtils.convertirValorAEntero(c2.getValor()), CartaUtils.convertirValorAEntero(c1.getValor())))
-                .toList();
-
-        List<Carta> cartasMano2 = mano2.getCartas().stream()
-                .sorted((c1, c2) -> Integer.compare(CartaUtils.convertirValorAEntero(c2.getValor()), CartaUtils.convertirValorAEntero(c1.getValor())))
-                .toList();
-
-        for (int i = 0; i < 5; i++) {
-            int valorMano1 = CartaUtils.convertirValorAEntero(cartasMano1.get(i).getValor());
-            int valorMano2 = CartaUtils.convertirValorAEntero(cartasMano2.get(i).getValor());
-
-            if(valorMano1 > valorMano2) {
-                return new ResultadoComparacion("hand1", "HighCard", PokerUtils.convertirCartasFormatoSoloValorAbreviado(cartasMano1));
-            } else if (valorMano2 > valorMano1) {
-                return new ResultadoComparacion("hand2", "HighCard", PokerUtils.convertirCartasFormatoSoloValorAbreviado(cartasMano2));
-
-            }
-        }
-
-        return new ResultadoComparacion("Empate", "HighCard", PokerUtils.convertirCartasFormatoSoloValor(mano1.getCartas(),false));
-
-    }
 
 }

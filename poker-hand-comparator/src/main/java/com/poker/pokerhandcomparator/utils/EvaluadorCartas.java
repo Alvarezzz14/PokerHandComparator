@@ -56,7 +56,7 @@ public class EvaluadorCartas {
         return esEscalera(mano) && esColor(mano);
     }
 
-    //Verififcar si una mano es un Poker(Four of kind)
+    //Verifier si una mano es un Poker(Four of kind)
     public static boolean esPoker(Mano mano) {
         Map<String, Long> conteoValores = mano.getCartas().stream()
                 .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
@@ -76,7 +76,7 @@ public class EvaluadorCartas {
         return mano.getCartas().stream().allMatch(carta -> carta.getPalo().equals(palo));
     }
 
-    //Metodo para verificar si es una Escalera
+    //Method para verificar si es una Escalera
     public static boolean esEscalera(Mano mano) {
         List<String> valoresOrdenados = mano.getCartas().stream()
                 .map(carta -> CartaUtils.convertirValorAEntero(carta.getValor()))
