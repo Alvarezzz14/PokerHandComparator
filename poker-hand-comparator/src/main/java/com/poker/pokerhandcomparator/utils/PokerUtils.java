@@ -3,7 +3,6 @@ package com.poker.pokerhandcomparator.utils;
 import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -83,8 +82,8 @@ public class PokerUtils {
 
         // Obtener los pares (conteo de 2), eliminando duplicados y ordenándolos
         List<String> pares = mano.getCartas().stream()
-                .filter(carta -> conteoValores.get(carta.getValor()) == 2)
                 .map(Carta::getValor)
+                .filter(valor -> conteoValores.get(valor) == 2)
                 .distinct() // Eliminar duplicados para tener solo un valor de cada par
                 .sorted((v1, v2) -> Integer.compare(CartaUtils.convertirValorAEntero(v2), CartaUtils.convertirValorAEntero(v1))) // Ordenar por valor descendente
                 .toList();
@@ -100,7 +99,32 @@ public class PokerUtils {
         return List.of();
     }
 
+    // Ordenar Three of a Kind
+    public static List<String> ordenarThreeOfAKind(Mano mano) {
+        // Agrupar las cartas por su valor y contar cuántas veces aparece cada valor
+        Map<String, Long> conteoValores = mano.getCartas().stream()
+                .collect(Collectors.groupingBy(Carta::getValor, Collectors.counting()));
 
+        // Obtener las cartas que forman el "Three of a Kind"
+        List<String> trio = new java.util.ArrayList<>(mano.getCartas().stream()
+                .map(Carta::getValor)
+                .filter(valor -> conteoValores.get(valor) == 3)
+                .map(CartaUtils::convertirAbreviaturaAValor) // Convertir a "King", "Queen", etc.
+                .toList());
+
+        // Obtener las cartas restantes
+        List<String> restantes = mano.getCartas().stream()
+                .map(Carta::getValor)
+                .filter(valor -> conteoValores.get(valor) != 3)
+                .sorted((v1, v2) -> Integer.compare(CartaUtils.convertirValorAEntero(v2), CartaUtils.convertirValorAEntero(v1))) // Ordenar por valor descendente
+                .map(CartaUtils::convertirAbreviaturaAValor)
+                .toList();
+
+
+        // Combinar el trio con las cartas restantes
+        trio.addAll(restantes);
+        return trio;
+    }
 
 
 }

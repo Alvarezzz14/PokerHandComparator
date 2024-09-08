@@ -72,6 +72,19 @@ public class pokerServiceImpl implements IPokerService {
             return new ResultadoComparacion("hand2", "Flush", PokerUtils.convertirCartasAString(mano2.getCartas()));
         }
 
+        // Comprobar Three of a Kind
+        if (EvaluadorCartas.esThreeOfAKind(mano1)) {
+            List<String> resultadoFormateado = PokerUtils.ordenarThreeOfAKind(mano1);
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+            return new ResultadoComparacion("hand1", "ThreeOfAKind", resultadoArray);
+        }
+        if (EvaluadorCartas.esThreeOfAKind(mano2)) {
+            List<String> resultadoFormateado = PokerUtils.ordenarThreeOfAKind(mano2);
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]);
+            return new ResultadoComparacion("hand2", "ThreeOfAKind", resultadoArray);
+        }
+
+
         // Comprobar Two Pair
         if (EvaluadorCartas.esTwoPair(mano1)) {
             List<String> resultadoFormateado = PokerUtils.ordenarTwoPair(mano1);
