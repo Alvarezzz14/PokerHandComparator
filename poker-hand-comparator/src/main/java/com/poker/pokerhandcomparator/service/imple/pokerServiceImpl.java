@@ -72,6 +72,19 @@ public class pokerServiceImpl implements IPokerService {
             return new ResultadoComparacion("hand2", "Flush", PokerUtils.convertirCartasAString(mano2.getCartas()));
         }
 
+        // Comprobar Two Pair
+        if (EvaluadorCartas.esTwoPair(mano1)) {
+            List<String> resultadoFormateado = PokerUtils.ordenarTwoPair(mano1);
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]); // Convertir la lista a un array
+            return new ResultadoComparacion("hand1", "TwoPair", resultadoArray);
+        }
+        if (EvaluadorCartas.esTwoPair(mano2)) {
+            List<String> resultadoFormateado = PokerUtils.ordenarTwoPair(mano2);
+            String[] resultadoArray = resultadoFormateado.toArray(new String[0]); // Convertir la lista a un array
+            return new ResultadoComparacion("hand2", "TwoPair", resultadoArray);
+        }
+
+
         //Si ninguna de las manos tiene una de las categorias anteriores, compara por la Carta Alta
         return compararCartaAlta(mano1, mano2);
     }
