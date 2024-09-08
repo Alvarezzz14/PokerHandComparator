@@ -1,5 +1,9 @@
 package com.poker.pokerhandcomparator.utils;
 
+import com.poker.pokerhandcomparator.exceptions.utils.InvalidCardFormatException;
+import com.poker.pokerhandcomparator.exceptions.utils.InvalidCardValueException;
+import com.poker.pokerhandcomparator.exceptions.utils.InvalidHandSizeException;
+import com.poker.pokerhandcomparator.exceptions.utils.ManoSizeUtils;
 import com.poker.pokerhandcomparator.model.Carta;
 import com.poker.pokerhandcomparator.model.Mano;
 
@@ -12,6 +16,8 @@ public class CartaUtils {
 
     // Convertir valor de carta a número
     public static int convertirValorAEntero(String valor) {
+
+
         return switch (valor) {
             case "A", "Ace" -> 14;
             case "K", "King" -> 13;
@@ -35,7 +41,8 @@ public class CartaUtils {
             case 13 -> "K";
             case 12 -> "Q";
             case 11 -> "J";
-            default -> String.valueOf(valor);
+            case 2,3,4,5,6,7,8,9,10 -> String.valueOf(valor);
+            default -> throw new InvalidCardValueException("Valor de carta inválido: " + valor);
         };
     }
 
@@ -46,7 +53,8 @@ public class CartaUtils {
             case "King" -> "K";
             case "Queen" -> "Q";
             case "Jack" -> "J";
-            default -> valor; // Si es un número, lo dejamos igual
+            case "2","3","4","5","6","7","8","9","10" -> valor;
+            default -> throw new InvalidCardValueException("Valor de carta inválido: " + valor);
         };
     }
     public static String convertirAbreviaturaAValor(String valor) {
@@ -55,24 +63,56 @@ public class CartaUtils {
             case "K" -> "King";
             case "Q" -> "Queen";
             case "J" -> "Jack";
-            default -> valor; // Si es un número, lo dejamos igual
+            case "2","3","4","5","6","7","8","9","10" -> valor;
+            default -> throw new InvalidCardValueException("Valor de carta inválido: " + valor);
         };
     }
 
     //Convertir cadena a un OBJETO Mano
     public static Mano convertirCadenaAMano(String manoStr){
-        List<Carta> cartas = Arrays.stream(manoStr.split(" "))
-                .map(CartaUtils::crearCarta)
-                .collect(Collectors.toList());
-        return new Mano(cartas);
+        try {
+            List<Carta> cartas = Arrays.stream(manoStr.split(" "))
+                    .map(CartaUtils::crearCarta)
+                    .collect(Collectors.toList());
+
+            ManoSizeUtils.validarTamanoMano(cartas);
+
+            return new Mano(cartas);
+
+        } catch (IllegalArgumentException e) {
+            throw new InvalidHandSizeException("Formato de mano inválido: " + manoStr);
+        }
+
     }
 
 
     //Crear un objeto Carta apartir de una cadena
     public static Carta crearCarta(String cartaStr) {
+
+        if (cartaStr == null || cartaStr.length() < 2) {
+            throw new InvalidCardFormatException("Formato de Carta Inválido: " + cartaStr);
+        }
+
         String valor = cartaStr.substring(0, cartaStr.length() -1);
         String palo = cartaStr.substring(cartaStr.length() -1);
+
+        if(!esValorValido(valor)) {
+            throw new InvalidCardFormatException("Valor de carta inválido: " + valor);
+        }
+
+        if(!esPaloValido(palo)) {
+            throw new InvalidCardFormatException("Palo de carta inválido: " +palo);
+        }
         return new Carta(valor, palo);
+    }
+
+    //Verificar si es un valor valido
+    private static boolean esPaloValido(String palo) {
+        return palo.matches("[CDHS]");
+    }
+    //Verificar si es un palo valido
+    private static boolean esValorValido(String valor) {
+        return valor.matches("^(10|[2-9]|[JQKA])$");
     }
 
 }
