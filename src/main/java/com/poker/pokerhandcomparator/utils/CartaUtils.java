@@ -13,17 +13,11 @@ public class CartaUtils {
     // Convertir valor de carta a número
     public static int convertirValorAEntero(String valor) {
         return switch (valor) {
-            case "A", "Ace" -> 14;
+            case "A", "As" -> 14;
             case "K", "King" -> 13;
             case "Q", "Queen" -> 12;
             case "J", "Jack" -> 11;
-            default -> {
-                try {
-                    yield Integer.parseInt(valor); // Números (2-10)
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Valor de carta inválido: " + valor);
-                }
-            }
+            default -> Integer.parseInt(valor);
         };
     }
 

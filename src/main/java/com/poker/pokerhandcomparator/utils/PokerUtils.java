@@ -29,7 +29,7 @@ public class PokerUtils {
             case "K" -> "King";
             case "Q" -> "Queen";
             case "J" -> "Jack";
-            case "A" -> "Ace";
+            case "A" -> "As";
             default -> valor; // Si no es una figura, simplemente devolvemos el valor
         };
     }
